@@ -1,0 +1,92 @@
+
+
+@font-face {
+  font-family: "KaioTRIAL";
+  src: url("../fonts/KaioTRIAL-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "KaioTRIAL";
+  src: url("../fonts/KaioTRIAL-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "KaioTRIAL";
+  src: url("../fonts/KaioTRIAL-Krilin.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+.font-kaio {
+  font-family: "KaioTRIAL", sans-serif;
+}
+.font-manrope{
+  font-family: "Manrope", sans-serif;
+}
+.slide {
+  opacity: 0.4;
+  transform: scale(0.7);
+  transition: all 0.5s ease;
+  flex-shrink: 0;
+}
+
+.slide.active {
+  opacity: 1;
+  transform: scale(1.6) rotate(13.82deg);
+  z-index: 20;
+}
+
+.tab.active{
+  background-color: #FFECB9;
+}
+.marquee-wrapper {
+  width: 100%;
+  overflow: hidden;
+
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+ 
+  animation: scroll 18s linear infinite;
+}
+
+.marquee-track svg {
+  min-width: 1400px;
+  height: 180px;
+}
+
+.curve-text {
+  fill: white;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+}
+
+
+
+/* Smooth infinite loop */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+.active-tab {
+    padding: 15px 35px;
+    background: #E63946;
+    color: white;
+  }
+.tab-btn {
+    transition: all 0.3s ease;
+  }
