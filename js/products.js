@@ -16,7 +16,7 @@ const nextBtn = document.getElementById("nextBtn");
 
 let currentIndex = 0;
 const cardWidth = 356;
-const gap = 24;
+const gap = 10;
 const slideWidth = cardWidth + gap;
 let autoPlay;
 
@@ -24,7 +24,7 @@ let autoPlay;
 function createCard(product) {
   return `
     <div class="flex-shrink-0 w-[356px]">
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-[10px]">
         <div class="rounded-2xl overflow-hidden">
           <img src="${product.img}" 
                class="w-[356px] h-[357px] object-cover rounded-2xl"/>
