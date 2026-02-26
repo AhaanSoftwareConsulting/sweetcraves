@@ -1,4 +1,3 @@
-
 const products = [
   {id:1, category:["favorites","giftboxes"], name:"Festive Sweet Box", price:"£4.95", img:"./images/pro1.jpg"},
   {id:2, category:["favorites","desserts"], name:"Red Velvet Delight", price:"£4.95", img:"./images/pro2.jpg"},
@@ -11,11 +10,15 @@ const products = [
 ];
 
 const track = document.getElementById("sliderTrack");
+const pagination = document.getElementById("pagination");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
 
 let currentIndex = 0;
 const cardWidth = 356;
 const gap = 24;
 const slideWidth = cardWidth + gap;
+let autoPlay;
 
 // Create card
 function createCard(product) {
@@ -53,17 +56,41 @@ function createCard(product) {
       </div>
     </div>
   `;
+
+}
+
+// Create pagination
+function createPagination() {
+  pagination.innerHTML = products.map((_, index) => `
+    <div data-index="${index}"
+      class="pagination-dot cursor-pointer bg-black/40 rounded-full transition-all duration-300 w-1 h-1">
+    </div>
+  `).join("");
+}
+
+// Update pagination active style
+function updatePagination() {
+  const dots = document.querySelectorAll(".pagination-dot");
+  dots.forEach(dot => {
+    dot.classList.remove("w-[23px]", "h-[4px]", "bg-black");
+    dot.classList.add("w-1", "h-1", "bg-black/40");
+  });
+
+  dots[currentIndex % products.length].classList.remove("w-1", "h-1", "bg-black/40");
+  dots[currentIndex % products.length].classList.add("w-[23px]", "h-[4px]", "bg-black", "rounded-md");
 }
 
 // Infinite setup
 function initSlider() {
-  const cloned = [...products, ...products]; // duplicate for loop
+  const cloned = [...products, ...products];
   track.innerHTML = cloned.map(createCard).join("");
+  createPagination();
+  updatePagination();
 }
 
 // Move slide
-function moveSlide() {
-  currentIndex++;
+function moveSlide(direction = 1) {
+  currentIndex += direction;
   track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
 
   if (currentIndex >= products.length) {
@@ -76,9 +103,43 @@ function moveSlide() {
       }, 50);
     }, 700);
   }
+
+  if (currentIndex < 0) {
+    track.style.transition = "none";
+    currentIndex = products.length - 1;
+    track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+    setTimeout(() => {
+      track.style.transition = "transform 700ms ease-in-out";
+    }, 50);
+  }
+
+  updatePagination();
 }
 
+// Navigation
+nextBtn.addEventListener("click", () => moveSlide(1));
+prevBtn.addEventListener("click", () => moveSlide(-1));
+
+// Pagination click
+pagination.addEventListener("click", (e) => {
+  if (e.target.dataset.index) {
+    currentIndex = Number(e.target.dataset.index);
+    track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+    updatePagination();
+  }
+});
+
 // Autoplay
-setInterval(moveSlide, 3000);
+function startAutoPlay() {
+  autoPlay = setInterval(() => moveSlide(1), 3000);
+}
+
+function stopAutoPlay() {
+  clearInterval(autoPlay);
+}
+
+track.addEventListener("mouseenter", stopAutoPlay);
+track.addEventListener("mouseleave", startAutoPlay);
 
 initSlider();
+startAutoPlay();
