@@ -30,14 +30,14 @@
 .font-manrope{
   font-family: "Manrope", sans-serif;
 }
-.slide {
+#hero .slide {
   opacity: 0.4;
   transform: scale(0.7);
   transition: all 0.5s ease;
   flex-shrink: 0;
 }
 
-.slide.active {
+#hero .slide.active {
   opacity: 1;
   transform: scale(1.6) rotate(13.82deg);
   z-index: 20;
@@ -90,3 +90,29 @@
 .tab-btn {
     transition: all 0.3s ease;
   }
+  .tab-btn:hover{
+    padding: 15px 35px;
+    background: #E63946;
+    color: white;
+  }
+#productHero .slide {
+ 
+  transition: all 0.5s ease;
+  flex-shrink: 0;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 1s ease-in-out infinite;
+}

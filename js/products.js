@@ -1,49 +1,63 @@
+
 const products = [
-  {id:1, category:["favorites","giftboxes"], name:"Festive Sweet Box", price:"£4.95", img:"./images/pro1.jpg"},
-  {id:2, category:["favorites","desserts"], name:"Red Velvet Delight", price:"£4.95", img:"./images/pro2.jpg"},
-  {id:3, category:["favorites","icecream"], name:"Mango Gelato", price:"£3.50", img:"./images/pro3.jpg"},
-  {id:4, category:["favorites","desserts","giftboxes"], name:"Dessert Delight Box", price:"£18.99", img:"./images/pro4.jpg"},
-  {id:5, category:["favorites","chocolates"], name:"Almond Crunch Bar", price:"£4.95", img:"./images/pro5.jpg"},
-  {id:6, category:["desserts"], name:"Chocolate Fudge Cake", price:"£6.95", img:"./images/descard.jpg"},
-  {id:7, category:["icecream"], name:"Strawberry Scoop", price:"£3.00", img:"./images/icecard.jpg"},
-  {id:8, category:["chocolates"], name:"Truffle Box", price:"£9.99", img:"./images/pro4.jpg"}
+  { id: 1, category: ["favorites", "giftboxes"], title: "Festive Sweet Box", price: "£4.95", image: "./images/pro1.png" },
+  { id: 2, category: ["favorites", "desserts"], title: "Red Velvet Delight", price: "£4.95", image: "./images/pro2.png" },
+  { id: 3, category: ["favorites", "icecream"], title: "Mango Gelato", price: "£3.50", image: "./images/pro3.png" },
+  { id: 4, category: ["favorites", "desserts", "giftboxes"], title: "Dessert Delight Box", price: "£18.99", image: "./images/pro4.png" },
+  { id: 5, category: ["favorites", "chocolates"], title: "Almond Crunch Bar", price: "£4.95", image: "./images/pro5.png" },
 ];
 
-const track = document.getElementById("sliderTrack");
-const pagination = document.getElementById("pagination");
-const prevBtn = document.getElementById("prevBtn");
-const nextBtn = document.getElementById("nextBtn");
+document.addEventListener("DOMContentLoaded", function () {
 
-let currentIndex = 0;
-const cardWidth = 356;
-const gap = 10;
-const slideWidth = cardWidth + gap;
-let autoPlay;
+  const track = document.getElementById("productTrack");
+  const hero = document.getElementById("productHero");
+  const pagination = document.getElementById("propagination");
 
-// Create card
-function createCard(product) {
-  return `
-    <div class="flex-shrink-0 w-[356px]">
-      <div class="flex flex-col gap-[10px]">
-        <div class="rounded-2xl overflow-hidden">
-          <img src="${product.img}" 
-               class="w-[356px] h-[357px] object-cover rounded-2xl"/>
-        </div>
+  const visibleProducts = products.filter(p =>
+    p.category.includes("favorites")
+  );
 
-        <!-- Product Name -->
-                <h3 class="text-[22px] leading-[22px] font-bold text-[#001C49]">
-                   ${product.name}
-                </h3>
+  // ===============================
+  // CREATE SLIDES
+  // ===============================
+  visibleProducts.forEach(product => {
 
-        <div class="flex items-center justify-between">
-          <!-- Price -->
-                    <span class="text-[20px] leading-[20px] font-bold text-[#E63946]">
-                        ${product.price}
-                    </span>
+    const slide = document.createElement("div");
+    slide.className = "slide flex-shrink-0 flex-shrink-0 w-full md:w-1/2 lg:w-[356px]";
+    slide.style.width = "356px";
 
-          <!-- Cart Button -->
-                    <button
-                        class="w-[58px] h-[54px] border border-[#E63946] rounded-[5px] flex items-center justify-center hover:bg-[#E63946] group transition">
+    slide.innerHTML = `
+        <div class="w-[356px] flex flex-col items-start gap-[20px]">
+
+  <!-- Image -->
+  <div class="w-full aspect-[356/357] rounded-[20px] overflow-hidden">
+    <img src="${product.image}"
+         class="w-[356px] h-[357px]">
+  </div>
+
+  <div class="mt-5 flex flex-col items-start gap-[20px]">
+
+    <!-- Title -->
+    <h3 class="font-kaio 
+               font-bold text-[22px] leading-[22px] 
+               text-[#001C49]">
+     ${product.title}
+    </h3>
+
+    <div class="mt-5
+                flex justify-between items-center">
+
+      <!-- Price -->
+      <span class="font-kaio
+                   text-[20px] leading-[20px] 
+                   font-bold text-center 
+                   text-[#E63946]">
+        ${product.price}
+      </span>
+
+      <!-- Shopping Bag Button -->
+      <button  
+                        class="add-to-cart-btn border border-[#E63946] px-[15px] py-[15px] rounded-[5px] flex items-center justify-center  group transition">
 
                         <!-- Shopping Bag Icon -->
                         <svg width="29" height="25" viewBox="0 0 29 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -52,94 +66,160 @@ function createCard(product) {
 
 
                     </button>
-        </div>
-      </div>
+
     </div>
-  `;
+  </div>
+</div>
+    `;
 
-}
+    track.appendChild(slide);
+    const btn = slide.querySelector(".add-to-cart-btn");
 
-// Create pagination
-function createPagination() {
-  pagination.innerHTML = products.map((_, index) => `
-    <div data-index="${index}"
-      class="pagination-dot cursor-pointer bg-black/40 rounded-full transition-all duration-300 w-1 h-1">
-    </div>
-  `).join("");
-}
-
-// Update pagination active style
-function updatePagination() {
-  const dots = document.querySelectorAll(".pagination-dot");
-  dots.forEach(dot => {
-    dot.classList.remove("w-[23px]", "h-[4px]", "bg-black");
-    dot.classList.add("w-1", "h-1", "bg-black/40");
+btn.addEventListener("click", () => {
+  addToCart({
+    id: product.id,
+    title: product.title,
+    price: product.price,
+    image: product.image
+  });
+});
   });
 
-  dots[currentIndex % products.length].classList.remove("w-1", "h-1", "bg-black/40");
-  dots[currentIndex % products.length].classList.add("w-[23px]", "h-[4px]", "bg-black", "rounded-md");
-}
+  const originalSlides = Array.from(track.children);
 
-// Infinite setup
-function initSlider() {
-  const cloned = [...products, ...products];
-  track.innerHTML = cloned.map(createCard).join("");
-  createPagination();
-  updatePagination();
-}
+  // ===============================
+  // CLONE FOR INFINITE LOOP
+  // ===============================
+  originalSlides.forEach(slide => {
+    track.appendChild(slide.cloneNode(true));
+    track.insertBefore(slide.cloneNode(true), track.firstChild);
+  });
 
-// Move slide
-function moveSlide(direction = 1) {
-  currentIndex += direction;
-  track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+  let slides = Array.from(track.children);
+  let index = originalSlides.length;
 
-  if (currentIndex >= products.length) {
+  let slideWidth = 0;
+  let gap = 24;
+  let totalSlideWidth = 0;
+
+  // ===============================
+  // METRICS
+  // ===============================
+  function getSlideMetrics() {
+    slideWidth = 356;
+    totalSlideWidth = slideWidth +12;
+  }
+
+  // ===============================
+  // POSITION
+  // ===============================
+  function updatePosition(animated = true) {
+
+    track.style.transition = animated
+      ? "transform 0.6s ease"
+      : "none";
+
+    track.style.transform =
+      `translateX(-${index * totalSlideWidth}px)`;
+
+    updateDots();
+  }
+
+  // ===============================
+  // NEXT / PREV
+  // ===============================
+  function next() {
+    index++;
+    updatePosition();
+    resetIfNeeded();
+  }
+
+  function prev() {
+    index--;
+    updatePosition();
+    resetIfNeeded();
+  }
+
+  // ===============================
+  // RESET
+  // ===============================
+  function resetIfNeeded() {
     setTimeout(() => {
-      track.style.transition = "none";
-      currentIndex = 0;
-      track.style.transform = `translateX(0px)`;
-      setTimeout(() => {
-        track.style.transition = "transform 700ms ease-in-out";
-      }, 50);
-    }, 700);
+
+      if (index >= slides.length - originalSlides.length) {
+        index = originalSlides.length;
+        updatePosition(false);
+      }
+
+      if (index < originalSlides.length) {
+        index = slides.length - originalSlides.length * 2;
+        updatePosition(false);
+      }
+
+    }, 600);
   }
 
-  if (currentIndex < 0) {
-    track.style.transition = "none";
-    currentIndex = products.length - 1;
-    track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
-    setTimeout(() => {
-      track.style.transition = "transform 700ms ease-in-out";
-    }, 50);
+  // ===============================
+  // PAGINATION
+  // ===============================
+  visibleProducts.forEach((_, i) => {
+
+    const dot = document.createElement("div");
+    dot.className = "dot w-[5px] h-[5px] bg-[#1C1C1C26] rounded-full cursor-pointer transition-all";
+
+    dot.addEventListener("click", () => {
+      index = originalSlides.length + i;
+      updatePosition();
+    });
+
+    pagination.appendChild(dot);
+  });
+
+  const dots = document.querySelectorAll(".dot");
+
+  function updateDots() {
+
+    let realIndex =
+      (index - originalSlides.length) % originalSlides.length;
+
+    if (realIndex < 0) realIndex += originalSlides.length;
+
+    dots.forEach((dot, i) => {
+      if (i === realIndex) {
+        dot.style.width = "23px";
+        dot.style.height = "5px";
+        dot.style.backgroundColor = "#1c1c1c";
+      } else {
+        dot.style.width = "5px";
+        dot.style.height = "5px";
+        dot.style.backgroundColor = "#1C1C1C26";
+      }
+    });
   }
 
-  updatePagination();
-}
+  // ===============================
+  // AUTOPLAY
+  // ===============================
+  let autoSlide = setInterval(next, 3000);
 
-// Navigation
-nextBtn.addEventListener("click", () => moveSlide(1));
-prevBtn.addEventListener("click", () => moveSlide(-1));
+  hero.addEventListener("mouseenter", () => clearInterval(autoSlide));
+  hero.addEventListener("mouseleave", () => {
+    autoSlide = setInterval(next, 3000);
+  });
 
-// Pagination click
-pagination.addEventListener("click", (e) => {
-  if (e.target.dataset.index) {
-    currentIndex = Number(e.target.dataset.index);
-    track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
-    updatePagination();
-  }
+  // ===============================
+  // NAV
+  // ===============================
+  document.getElementById("pronext").addEventListener("click", next);
+  document.getElementById("proprev").addEventListener("click", prev);
+
+  // ===============================
+  // INIT
+  // ===============================
+  getSlideMetrics();
+  updatePosition(false);
+
 });
 
-// Autoplay
-function startAutoPlay() {
-  autoPlay = setInterval(() => moveSlide(1), 3000);
-}
 
-function stopAutoPlay() {
-  clearInterval(autoPlay);
-}
 
-track.addEventListener("mouseenter", stopAutoPlay);
-track.addEventListener("mouseleave", startAutoPlay);
-
-initSlider();
-startAutoPlay();
